@@ -12,8 +12,8 @@ class NetworkManagerOO: ObservableObject {
     @Published var characters: [CharacterDetail] = []
     @Published var searchText: String = "rick"
     
-    func fetchCharacters() async throws {
-        guard let url = URL(string: "https://rickandmortyapi.com/api/character/name=\(searchText)") else {
+    func fetchCharacters(searchText: String) async throws {
+        guard let url = URL(string: "https://rickandmortyapi.com/api/character/?name=\(searchText)") else {
            return
         }
         do {
@@ -21,7 +21,7 @@ class NetworkManagerOO: ObservableObject {
             let decoder = JSONDecoder()
             let charactersData = try decoder.decode(CharacterResponse.self, from: data)
             await MainActor.run {
-                self.characters = charactersData.result
+                self.characters = charactersData.results
             }
         } catch {
         }

@@ -9,7 +9,7 @@ import Foundation
 
 
 struct CharacterResponse: Decodable {
-    let result: [CharacterDetail]
+    let results: [CharacterDetail]
 }
 struct CharacterDetail: Decodable, Identifiable {
     let id: Int
