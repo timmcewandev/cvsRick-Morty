@@ -11,7 +11,7 @@ import SwiftUI
 struct cvsRick_MortyApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ListViewMain()
         }
     }
 }
