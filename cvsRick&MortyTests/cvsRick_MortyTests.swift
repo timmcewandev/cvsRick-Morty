@@ -18,18 +18,18 @@ final class cvsRick_MortyTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    func testDebounceIfUserStopsTyping() async throws {
+        Task {
+           /// User opens up a task on starts typing on keyboard. In order not to run up the request on each keystroke. We debounce setup a wait time hopefully the user is done///
+        }
+        let debounceInterval: Double = 0.2
+        
+        // Debounce the API call
+        try await Task.sleep(nanoseconds: UInt64(debounceInterval * 1_000_000_000))
+        
+        // Check if the task was cancelled during the sleep
+        if Task.isCancelled {
+            XCTFail("Means the user cancelled typing")
         }
     }
 

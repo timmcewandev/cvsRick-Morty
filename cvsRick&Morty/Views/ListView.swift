@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ListMainView: View {
+struct ListView: View {
     @State var name: String
     @State var species: String
     @State var imagageURL: String
@@ -38,9 +38,14 @@ struct ListMainView: View {
                     .font(.headline)
                 Text(species)
                     .font(.caption)
+                    
             }
             
+            
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text("name:\(name) species:\(species)"))
+        .accessibility(hint: Text("Tap to view details"))
         .onTapGesture {
             tap()
         }

@@ -10,7 +10,7 @@ import Combine
 
 struct ListViewMain: View {
     @StateObject private var oo = NetworkManagerOO()
-    @State private var selectedCharacter: Character?
+    @State private var selectedCharacter: CharacterDetail?
     @State private var isTextPresented: Bool = false
     var body: some View {
         NavigationStack {
@@ -21,15 +21,20 @@ struct ListViewMain: View {
                 List(content: {
                     ForEach(oo.characters, id: \.id) { character in
                         let c = character
-                        ListMainView(name: c.name, species: c.species, imagageURL: c.image) {
+                        ListView(name: c.name, species: c.species, imagageURL: c.image) {
+                            selectedCharacter = c
                         }
                     }
+                    
+                    
                 })
+                
             }
             
         }
         .searchable(text: $oo.searchText, isPresented: $isTextPresented, prompt: "search")
         .onChange(of: oo.searchText) { newValue in
+            oo.characters = []
             oo.searchText = newValue
             Task {
                 try? await oo.fetchCharacters(searchText: newValue)
@@ -44,6 +49,10 @@ struct ListViewMain: View {
             } catch {
                 print("Error fetching characters: \(error)")
             }
+        }
+        .sheet(item: $selectedCharacter) { character in
+            DetailView(character: character)
+                .presentationDetents([.fraction(0.80)])
         }
     }
 }
