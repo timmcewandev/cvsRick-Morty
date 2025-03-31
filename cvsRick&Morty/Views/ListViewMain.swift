@@ -34,11 +34,7 @@ struct ListViewMain: View {
         }
         .searchable(text: $oo.searchText, isPresented: $isTextPresented, prompt: "search")
         .onChange(of: oo.searchText) { newValue in
-            oo.characters = []
-            oo.searchText = newValue
-            Task {
-                try? await oo.fetchCharacters(searchText: newValue)
-            }
+            oo.searchCharacters(newText: newValue)
         }
         .refreshable {
             try? await oo.fetchCharacters(searchText: oo.searchText)

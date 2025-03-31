@@ -11,13 +11,14 @@ import Foundation
 class NetworkManagerOO: ObservableObject {
     @Published var characters: [CharacterDetail] = []
     @Published var searchText: String = "rick"
-    let debounceInterval: Double = 3 
+    private var searchDebounce: Timer?
+    let debounceInterval: Double = 3
+    
+    deinit {
+        searchDebounce?.invalidate()
+    }
+    
     func fetchCharacters(searchText: String) async throws {
-        // Debounce the API call no avoid api calls with search keystroke. I personally think 3 seconds should be enough.
-        try? await Task.sleep(nanoseconds: UInt64(debounceInterval * 1_000_000_000))
-        
-        // Check if the task was cancelled during the sleep
-        if Task.isCancelled { return }
         guard let url = URL(string: "https://rickandmortyapi.com/api/character/?name=\(searchText)") else {
            return
         }
@@ -29,6 +30,15 @@ class NetworkManagerOO: ObservableObject {
                 self.characters = charactersData.results
             }
         } catch {
+        }
+    }
+    
+    func searchCharacters(newText: String) {
+        searchDebounce?.invalidate()
+        searchDebounce = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
+            Task {
+                try? await self.fetchCharacters(searchText: newText)
+            }
         }
     }
     
